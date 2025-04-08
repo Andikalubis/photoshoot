@@ -1,60 +1,156 @@
-<?php $this->load->view('tamplate/head'); ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Photoshoot App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?= base_url('assets/js/webcam.min.js') ?>"></script>
 
-<body>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
 
-    <div class="container">
-        <h2>Photoshoot Form</h2>
+        .container {
+            max-width: 1100px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-        <div class="form-group">
-            <label>Nama:</label>
-            <input type="text" id="nama" name="nama">
-        </div>
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
 
-        <div class="form-group">
-            <label>No. RM:</label>
-            <input type="text" id="no_rm" name="no_rm">
-        </div>
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-        <div class="camera-section">
-            <div>
-                <div id="my_camera"></div>
-                <button onclick="take_snapshot()">Ambil Foto</button>
-            </div>
-            <div id="results"></div>
-        </div>
-    </div>
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+        }
 
-    <script type="text/javascript">
-        Webcam.set({
-            width: 320,
-            height: 240,
-            image_format: 'jpeg',
-            jpeg_quality: 90
-        });
-        Webcam.attach('#my_camera');
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
 
-        function take_snapshot() {
-            let nama = $('#nama').val().trim();
-            let no_rm = $('#no_rm').val().trim();
+        .camera-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+            justify-content: center;
+        }
 
-            if (!nama || !no_rm) {
-                alert("Isi semua form terlebih dahulu!");
-                return;
+        #my_camera, #results {
+            width: 480px;
+            height: 360px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background-color: #eee;
+        }
+
+        button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .camera-section {
+                flex-direction: column;
+                align-items: center;
             }
 
-            Webcam.snap(function(data_uri) {
-                $('#results').html('<img src="'+data_uri+'" style="width: 100%; border-radius: 8px;" />');
-
-                $.post("<?= site_url('photoshoot/capture') ?>", {
-                    nama: nama,
-                    no_rm: no_rm,
-                    image: data_uri
-                }, function(response) {
-                    alert(response);
-                });
-            });
+            #my_camera, #results {
+                width: 100%;
+                height: auto;
+            }
         }
-    </script>
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Photoshoot Form</h2>
+
+    <div class="form-group">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" name="nama" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="no_rm">No. RM:</label>
+        <input type="text" id="no_rm" name="no_rm" class="form-control">
+    </div>
+
+    <div class="camera-section">
+        <div>
+            <div id="my_camera"></div>
+            <button onclick="take_snapshot()">Ambil Foto</button>
+        </div>
+        <div id="results"></div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+
+<script type="text/javascript">
+    Webcam.set({
+        width: 480,
+        height: 360,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+    Webcam.attach('#my_camera');
+
+    function take_snapshot() {
+        let nama = $('#nama').val().trim();
+        let no_rm = $('#no_rm').val().trim();
+
+        if (!nama || !no_rm) {
+            alert("Isi semua form terlebih dahulu!");
+            return;
+        }
+
+        Webcam.snap(function(data_uri) {
+            $('#results').html('<img src="' + data_uri + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />');
+
+            $.post("<?= site_url('photo/capture') ?>", {
+                nama: nama,
+                no_rm: no_rm,
+                image: data_uri
+            }, function(response) {
+                alert(response);
+            });
+        });
+    }
+</script>
 
 </body>
 </html>
