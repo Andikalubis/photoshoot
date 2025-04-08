@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Photoshoot App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?= base_url('assets/js/jquery-3.6.0.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/webcam.min.js') ?>"></script>
 
     <style>
@@ -112,13 +112,16 @@
     <div class="camera-section">
         <div>
             <div id="my_camera"></div>
-            <button onclick="take_snapshot()">Ambil Foto</button>
         </div>
         <div id="results"></div>
     </div>
+    
+    <div style="margin-top: 2rem;">
+        <span style="color: red;"> KLIK KANAN DIAMANA SAJA UNTUK MENGAMBIL GAMBAR....!!!</span>
+    </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+<script src="<?= base_url('assets/js/sweetalert2@11.js') ?>"></script>
 
 <script type="text/javascript">
     Webcam.set({
@@ -129,12 +132,19 @@
     });
     Webcam.attach('#my_camera');
 
-    function take_snapshot() {
+    $(document).on('contextmenu', function(e) {
+        e.preventDefault();
+
         let nama = $('#nama').val().trim();
         let no_rm = $('#no_rm').val().trim();
 
         if (!nama || !no_rm) {
-            alert("Isi semua form terlebih dahulu!");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Isi semua form terlebih dahulu!',
+                confirmButtonColor: '#007bff'
+            });
             return;
         }
 
@@ -146,10 +156,15 @@
                 no_rm: no_rm,
                 image: data_uri
             }, function(response) {
-                alert(response);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response,
+                    confirmButtonColor: '#007bff'
+                });
             });
         });
-    }
+    });
 </script>
 
 </body>
