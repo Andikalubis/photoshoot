@@ -117,7 +117,7 @@
     </div>
     
     <div style="margin-top: 2rem;">
-        <span style="color: red;"> KLIK KANAN DIAMANA SAJA UNTUK MENGAMBIL GAMBAR....!!!</span>
+        <span style="color: red;"> KLIK KANAN DIMANA SAJA UNTUK MENGAMBIL GAMBAR....!!!</span>
     </div>
 </div>
 
